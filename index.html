@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Mon interface simple</title>
+  <meta charset="UTF-8">
+  <title>Story Points Jira</title>
 </head>
 <body>
-  <h2>Entre un texte :</h2>
-  <input type="text" id="userInput" placeholder="Tape ici..." />
+  <h2>Entre la clé de l'epic JIRA</h2>
+  <input type="text" id="userInput" placeholder="Ex: BUILDER-2602" />
   <button onclick="sendInput()">Entrer</button>
 
   <h3>Résultat :</h3>
@@ -14,13 +15,34 @@
   <script>
     async function sendInput() {
       const input = document.getElementById('userInput').value;
-      const response = await fetch('https://n8n.swapcard.com/webhook-test/9478b228-a498-4e95-a755-61193fa7f6f9', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ texte: input })
-      });
-      const data = await response.json();
-      document.getElementById('result').innerText = data.resultat || 'Pas de résultat';
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = "Chargement...";
+
+      try {
+        const response = await fetch('https://n8n.swapcard.com/webhook-test/9478b228-a498-4e95-a755-61193fa7f6f9', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ texte: input })
+        });
+
+        if (!response.ok) throw new Error("Erreur HTTP");
+
+        const data = await response.json();
+
+        // Affichage du résultat
+        resultDiv.innerHTML = `
+          <p><strong>🧩 Epic :</strong> ${data.epic}</p>
+          <p><strong>📋 Nombre de tickets :</strong> ${data.ticketCount}</p>
+          <p><strong>✅ Story Points :</strong> ${data.totalSP}</p>
+          <p><strong>🧮 Estimation corrigée :</strong> ${data.estimatedSP}</p>
+          <p><strong>📆 DevTime Goal :</strong> ${data.devTimeGoal} jours</p>
+          ${data.firstInProgressDate ? `<p><strong>🕒 Début "In Progress" :</strong> ${new Date(data.firstInProgressDate).toLocaleDateString()}</p>` : ''}
+          ${data.eta ? `<p><strong>🚀 ETA :</strong> ${new Date(data.eta).toLocaleDateString()}</p>` : '<p>🚫 Pas encore de ticket en "In Progress"</p>'}
+        `;
+      } catch (err) {
+        resultDiv.innerHTML = "❌ Erreur lors de la récupération des données.";
+        console.error(err);
+      }
     }
   </script>
 </body>
