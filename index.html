@@ -5,11 +5,11 @@
   <title>Story Points Jira</title>
 </head>
 <body>
-  <h2>Entre la clé de l'epic JIRA</h2>
+  <h2>Give the JIRA Epic Key</h2>
   <input type="text" id="userInput" placeholder="Ex: BUILDER-2602" />
   <button onclick="sendInput()">Entrer</button>
 
-  <h3>Résultat :</h3>
+  <h3>Result :</h3>
   <div id="result"></div>
 
   <script>
@@ -32,15 +32,15 @@
         // Affichage du résultat
         resultDiv.innerHTML = `
           <p><strong>🧩 Epic :</strong> ${data.epic}</p>
-          <p><strong>📋 Nombre de tickets :</strong> ${data.ticketCount}</p>
-          <p><strong>✅ Story Points :</strong> ${data.totalSP}</p>
-          <p><strong>🧮 Estimation corrigée :</strong> ${data.estimatedSP}</p>
+          <p><strong>📋 # tickets :</strong> ${data.ticketCount}</p>
+          <p><strong>✅ # SP :</strong> ${data.totalSP}</p>
+          <p><strong>🧮 # Estimated SP :</strong> ${data.estimatedSP}</p>
           <p><strong>📆 DevTime Goal :</strong> ${data.devTimeGoal} jours</p>
           ${data.firstInProgressDate ? `<p><strong>🕒 Début "In Progress" :</strong> ${new Date(data.firstInProgressDate).toLocaleDateString()}</p>` : ''}
-          ${data.eta ? `<p><strong>🚀 ETA :</strong> ${new Date(data.eta).toLocaleDateString()}</p>` : '<p>🚫 Pas encore de ticket en "In Progress"</p>'}
+          ${data.eta ? `<p><strong>🚀 ETA Goal :</strong> ${new Date(data.eta).toLocaleDateString()}</p>` : '<p>🚫 Pas encore de ticket en "In Progress"</p>'}
         `;
       } catch (err) {
-        resultDiv.innerHTML = "❌ Erreur lors de la récupération des données.";
+        resultDiv.innerHTML = "❌ Error while trying to get Data.";
         console.error(err);
       }
     }
