@@ -7,12 +7,30 @@
 <body>
   <h2>Give the JIRA Epic Key</h2>
   <input type="text" id="userInput" placeholder="Ex: BUILDER-2602" />
-  <button onclick="sendInput()">Enter</button>
+
+  <div style="margin-top: 10px;">
+    <label><input type="checkbox" class="check" /> All tickets have been created and estimated in the attached epic(s)</label><br>
+    <label><input type="checkbox" class="check" /> Developments already started</label><br>
+    <label><input type="checkbox" class="check" /> If epic(s) contains FE/Mob, FE/Mob already started</label>
+  </div>
+
+  <button id="estimateBtn" onclick="sendInput()" disabled style="margin-top: 10px;">Estimate</button>
 
   <h3>Result :</h3>
   <div id="result"></div>
 
   <script>
+    // Gestion du bouton disabled/enabled
+    const checkboxes = document.querySelectorAll('.check');
+    const estimateBtn = document.getElementById('estimateBtn');
+
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', () => {
+        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+        estimateBtn.disabled = !allChecked;
+      });
+    });
+
     async function sendInput() {
       const input = document.getElementById('userInput').value;
       const resultDiv = document.getElementById('result');
@@ -47,3 +65,4 @@
   </script>
 </body>
 </html>
+
