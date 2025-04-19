@@ -19,7 +19,7 @@
       resultDiv.innerHTML = "Chargement...";
 
       try {
-        const response = await fetch('https://n8n.swapcard.com/n8nhook/9478b228-a498-4e95-a755-61193fa7f6f9', {
+        const response = await fetch('https://n8n.swapcard.com/webhook-test/9478b228-a498-4e95-a755-61193fa7f6f9', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ texte: input })
