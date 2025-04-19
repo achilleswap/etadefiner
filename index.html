@@ -57,7 +57,7 @@
           <p><strong>📋 # tickets :</strong> ${data.ticketCount}</p>
           <p><strong>✅ # SP :</strong> ${data.totalSP}</p>
           <p><strong>🧮 # Estimated SP :</strong> ${data.estimatedSP}</p>
-          <p><strong>📆 DevTime Goal :</strong> ${data.devTimeGoal} jours</p>
+          <p><strong>📆 DevTime Goal :</strong> ${data.devTimeGoal} days</p>
           ${data.firstInProgressDate ? `<p><strong>🕒 Developments Started at :</strong> ${new Date(data.firstInProgressDate).toLocaleDateString()}</p>` : ''}
           ${data.eta ? `<p><strong>🚀 ETA Goal :</strong> ${new Date(data.eta).toLocaleDateString()}</p>` : '<p>🚫 Pas encore de ticket en "In Progress"</p>'}
         `;
