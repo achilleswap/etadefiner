@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -6,7 +6,11 @@
 </head>
 <body>
   <h2>ETA Goal Definer</h2>
-  <input type="text" id="userInput" placeholder="Ex: BUILDER-2602" />
+  
+  <div style="display: flex; align-items: center; gap: 12px;">
+    <input type="text" id="userInput" placeholder="Epic(s) Keys" style="flex: 1;" />
+    <em style="font-size: 0.9em; color: #555;">Add the keys of all epics linked to the feature, separated by commas — for example: BUILDER-2602, MAT-2453</em>
+  </div>
 
   <div style="margin-top: 10px;">
     <label><input type="checkbox" class="check" /> All tickets have been created and estimated in the attached epic(s)</label><br>
@@ -65,4 +69,3 @@
   </script>
 </body>
 </html>
-
