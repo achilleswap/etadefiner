@@ -71,7 +71,7 @@
       const input = document.getElementById('userInput').value.trim();
       const resultDiv = document.getElementById('result');
       const spinner = document.getElementById('spinner');
-      
+
       resultDiv.innerHTML = '';
       spinner.classList.remove('hidden');
 
@@ -90,8 +90,34 @@
           <p><strong>🧩 Epic:</strong> ${data.epic}</p>
           <p><strong>📋 # Tickets:</strong> ${data.ticketCount}</p>
           <p><strong>✅ Total SP:</strong> ${data.totalSP}</p>
-          <p><strong>🧮 Estimated SP:</strong> ${data.estimatedSP}</p>
-          <p><strong>📆 DevTime Goal:</strong> ${data.devTimeGoal} days</p>
+          <p>
+            <strong>🧮 Estimated SP:</strong> ${data.estimatedSP}
+            <span class="relative group cursor-pointer ml-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <title>Estimated SP Info</title>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 1010 10A10 10 0 0012 2z" />
+              </svg>
+              <div class="absolute left-1/2 transform -translate-x-1/2 mt-1 w-64 p-2 text-sm text-gray-700 bg-white border border-green-300 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition z-10">
+                Based on the multiplier ratio, 
+                <a href="https://www.notion.so/swapcard/Implement-an-ETA-calculation-Tool-19e3758f57d480eaa06ef121a896321d?pvs=4#1d63758f57d480efb807dd7a37d43d2c" target="_blank" class="text-green-700 underline">click here</a>
+                for more info.
+              </div>
+            </span>
+          </p>
+          <p>
+            <strong>📆 DevTime Goal:</strong> ${data.devTimeGoal} days
+            <span class="relative group cursor-pointer ml-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <title>DevTime Goal Info</title>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 1010 10A10 10 0 0012 2z" />
+              </svg>
+              <div class="absolute left-1/2 transform -translate-x-1/2 mt-1 w-72 p-2 text-sm text-gray-700 bg-white border border-green-300 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition z-10">
+                Based on the formula <code>DevTime Goal = 15 × √(Estimated SP)</code>, 
+                <a href="https://www.notion.so/swapcard/Implement-an-ETA-calculation-Tool-19e3758f57d480eaa06ef121a896321d?pvs=4#1d63758f57d480349902d84206fad777" target="_blank" class="text-green-700 underline">click here</a>
+                for more info.
+              </div>
+            </span>
+          </p>
           ${data.firstInProgressDate ? `<p><strong>🕒 Dev Started:</strong> ${new Date(data.firstInProgressDate).toLocaleDateString()}</p>` : ''}
           ${data.eta ? `<p><strong>🚀 ETA Goal:</strong> ${new Date(data.eta).toLocaleDateString()}</p>` : '<p>🚫 No ticket in "In Progress"</p>'}
         `;
