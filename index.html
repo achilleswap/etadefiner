@@ -21,7 +21,8 @@
     </div>
     <p class="text-sm text-gray-500 mb-4">Add the keys of all epics linked to the feature, separated by commas.</p>
 
-    <div class="space-y-2 mb-4">
+    <!-- Checkboxes -->
+    <div class="space-y-2">
       <label class="flex items-center gap-2">
         <input type="checkbox" class="check accent-green-600" />
         All tickets have been created and estimated in the attached epic(s)
@@ -36,6 +37,26 @@
       </label>
     </div>
 
+    <!-- Divider -->
+    <hr class="my-6 border-t border-gray-300" />
+
+    <!-- Toggle switch -->
+    <div class="flex items-center justify-between mb-6">
+      <label for="thirdPartyToggle" class="text-sm text-gray-700 font-medium">
+        This feature involves a third-party tool
+      </label>
+      <button 
+        id="thirdPartyToggle" 
+        class="relative w-12 h-6 bg-gray-300 rounded-full transition-colors duration-300 focus:outline-none" 
+        role="switch" 
+        aria-checked="false"
+        onclick="toggleSwitch(this)"
+      >
+        <span class="absolute left-0 top-0 h-6 w-6 bg-white rounded-full shadow transform transition-transform duration-300 translate-x-0"></span>
+      </button>
+    </div>
+
+    <!-- Estimate button -->
     <button 
       id="estimateBtn" 
       onclick="sendInput()" 
@@ -45,13 +66,14 @@
       Estimate
     </button>
 
+    <!-- Results -->
     <div id="resultContainer" class="mt-6">
       <h3 class="text-lg font-semibold text-green-700 mb-2">Result :</h3>
       <div id="result" class="bg-green-100 p-4 rounded-lg text-sm"></div>
     </div>
   </div>
 
-  <!-- Simple Spinner -->
+  <!-- Spinner -->
   <div id="spinner" class="hidden fixed top-0 left-0 w-full h-full bg-green-50 bg-opacity-50 flex items-center justify-center z-50">
     <div class="animate-spin rounded-full h-16 w-16 border-4 border-green-600 border-t-transparent"></div>
   </div>
@@ -67,8 +89,25 @@
       });
     });
 
+    function toggleSwitch(button) {
+      const isActive = button.getAttribute('aria-checked') === 'true';
+      button.setAttribute('aria-checked', String(!isActive));
+      button.classList.toggle('bg-green-600', !isActive);
+      button.classList.toggle('bg-gray-300', isActive);
+
+      const knob = button.querySelector('span');
+      knob.classList.toggle('translate-x-6', !isActive);
+      knob.classList.toggle('translate-x-0', isActive);
+    }
+
+    function getThirdPartyValue() {
+      const toggle = document.getElementById('thirdPartyToggle');
+      return toggle.getAttribute('aria-checked') === 'true';
+    }
+
     async function sendInput() {
       const input = document.getElementById('userInput').value.trim();
+      const thirdParty = getThirdPartyValue();
       const resultDiv = document.getElementById('result');
       const spinner = document.getElementById('spinner');
       
@@ -76,10 +115,13 @@
       spinner.classList.remove('hidden');
 
       try {
-        const response = await fetch('https://n8n.swapcard.com/n8nhook/9478b228-a498-4e95-a755-61193fa7f6f9', {
+        const response = await fetch('https://n8n.swapcard.com/n8nhook/80999c4d-fa5b-499c-ac58-7ecc4787f5d7', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ texte: input })
+          body: JSON.stringify({ 
+            texte: input,
+            thirdPartyInvolved: thirdParty
+          })
         });
 
         if (!response.ok) throw new Error("Erreur HTTP");
@@ -87,13 +129,20 @@
         const data = await response.json();
 
         resultDiv.innerHTML = `
-          <p><strong>🧩 Epic:</strong> ${data.epic}</p>
-          <p><strong>📋 # Tickets:</strong> ${data.ticketCount}</p>
-          <p><strong>✅ Total SP:</strong> ${data.totalSP}</p>
-          <p><strong>🧮 Estimated SP:</strong> ${data.estimatedSP}</p>
-          <p><strong>📆 DevTime Goal:</strong> ${data.devTimeGoal} days</p>
-          ${data.firstInProgressDate ? `<p><strong>🕒 Dev Started:</strong> ${new Date(data.firstInProgressDate).toLocaleDateString()}</p>` : ''}
-          ${data.eta ? `<p><strong>🚀 ETA Goal:</strong> ${new Date(data.eta).toLocaleDateString()}</p>` : '<p>🚫 No ticket in "In Progress"</p>'}
+          <p><strong>🧩 Epic(s):</strong> ${data.epic}</p>
+          <p><strong>📋 #Tickets:</strong> ${data.ticketCount}</p>
+          <p><strong>✅ #SP:</strong> ${data.totalSP}</p>
+          <p><strong>🧮 #SP estimated:</strong> ${data.estimatedSP}</p>
+          <p><strong>📆 Development Time Goal:</strong> ${data.devTimeGoal} days</p>
+          ${data.firstInProgressDate ? `<p><strong>🕒 First ticket in progress:</strong> ${new Date(data.firstInProgressDate).toLocaleDateString()}</p>` : ''}
+          ${data.eta ? `<p><strong>🚀 ETA (Progress not considered):</strong> ${new Date(data.eta).toLocaleDateString()}</p>` : '<p>🚫 No ticket in "In Progress"</p>'}
+          ${data.percentageCompleted > 0.05 ? `
+            <div class="text-center mt-4 text-yellow-700">
+              <p>⚠️ It looks like ${(data.percentageCompleted * 100).toFixed(0)}% of the feature is already completed.</p>
+              <p>Based on the progression and the remaining work, a more accurate ETA target would be</p>
+              <p class="mt-1 font-bold text-black">${new Date(data.etaProgressBased).toLocaleDateString()}</p>
+            </div>
+          ` : ''}
         `;
       } catch (err) {
         resultDiv.innerHTML = `<p class="text-red-600">❌ Error while trying to get data.</p>`;
