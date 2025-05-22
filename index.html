@@ -141,7 +141,7 @@
           <h4 class="text-md font-semibold text-green-700 mt-4 mb-2">ETA Based on Progress</h4>
           <p><strong>📊 Percentage completed:</strong> ${(data.percentageCompleted * 100).toFixed(0)}%</p>
           <p><strong>🧮 #SP remaining estimated:</strong> ${data.estimatedSP_ProgressBased} SP</p>
-          <p><strong>📆 Development Time Goal:</strong> ${data.devTimeGoal_ProgressBased} day(s)</p>
+          <p><strong>📆 Development Time Goal:</strong> ${data.devTimeGoal_ProgressBased} days</p>
           <p><strong>🚀 ETA:</strong> ${new Date(data.etaProgressBased).toLocaleDateString()}</p>
         `;
       } catch (err) {
